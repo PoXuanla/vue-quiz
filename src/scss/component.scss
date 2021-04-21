@@ -1,0 +1,26 @@
+//hr
+.hr{
+    border:0px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border-top: 1px solid black;
+    opacity:.1;
+ }
+ .select{
+     padding:.5rem;
+     border-radius: .5rem;
+     text-align: center;
+     text-align-last: center;
+     outline: none;
+ }
+ .btn{
+     padding:.5rem;
+     font-size: 1rem;
+     outline: none;
+     border-radius: .5rem;
+     cursor: pointer;
+     border:1px solid rgba($color: #000000, $alpha: 0.1);
+     &:hover{
+        background-color: black;
+    }
+ }
