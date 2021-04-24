@@ -12,6 +12,8 @@
      text-align: center;
      text-align-last: center;
      outline: none;
+     font-family: "Ubuntu", "Noto Sans TC", Helvetica, Arial, sans-serif;
+
  }
  .btn{
      padding:.5rem;
@@ -19,8 +21,14 @@
      outline: none;
      border-radius: .5rem;
      cursor: pointer;
+     background-color: $green;
+     font-family: "Ubuntu", "Noto Sans TC", Helvetica, Arial, sans-serif;
+     color:$matcha;
      border:1px solid rgba($color: #000000, $alpha: 0.1);
-     &:hover{
+     &:hover:not([disabled]){
         background-color: black;
-    }
+     }
+     &:disabled{
+         opacity: .5;
+     }
  }

@@ -1,42 +1,43 @@
 <template>
   <div>
     <div class="p-1 bg-green d-flex justify-around">
-      <div>學科</div>
-      <div>困難度</div>
+      <div>{{ currentQuestion.category }}</div>
+      <div>{{ currentQuestion.difficulty }}</div>
     </div>
     <div class="p-1 bg-pink">
+      <loading :active.sync="isLoading"></loading>
       <!-- 題目名稱 -->
       <div class="d-flex flex-column w-70 m-auto font-weight-900">
-        Who had hits in the 70s with the songs "Lonely Boy" and "Never Let Her
-        Slip Away"?
+        {{ currentQuestion.question }}
       </div>
       <hr class="hr" />
       <!-- 題目選項 -->
       <div class="d-flex flex-column align-items-center">
-        <option-data 
-        v-for="item in currentQuestion.incorrect_answers"
-        :key="item"
-        :value="item"
-        :class="{active:item === selectOption}"
-        @selfClick="optionClick">
+        <option-data
+          v-for="item in currentQuestion.ramdomAnswer"
+          :key="item"
+          :value="item"
+          :class="{ active: item === selectOption }"
+          @selfClick="optionClick"
+        >
         </option-data>
-        <!-- <option-data
-          :value="123"
-          :class="{ active: '123' == selectOption }"
-          @selfClick="optionClick"
-        ></option-data>
-        <option-data
-          :value="456"
-          :class="{ active: '456' == selectOption }"
-          @selfClick="optionClick"
-        ></option-data>
-        <option-data
-          :value="789"
-          :class="{ active: '789' == selectOption }"
-          @selfClick="optionClick"
-        ></option-data> -->
         <div>
-            <a class="btn mt-1 mb-1">下一題</a>
+          <button
+            class="btn mt-1 mb-1"
+            v-if="currentIndex === 9"
+            :disabled="selectOption === ''"
+            @click="goAnswerPage()"
+          >
+            提交
+          </button>
+          <button
+            class="btn mt-1 mb-1"
+            :disabled="selectOption === ''"
+            v-else
+            @click="nextQuestion()"
+          >
+            下一題
+          </button>
         </div>
       </div>
     </div>
@@ -48,26 +49,84 @@
     name: "Question",
     data() {
       return {
-        selectOption: "123",
-        question:[],
-        currentQuestion:{}
+        selectOption: "",
+        question: [],
+        currentIndex: 0,
+        currentQuestion: {},
+        isLoading: true,
       };
     },
-    mounted(){
-        this.$http.get('https://opentdb.com/api.php?amount=10').then( response => {
-            console.log(response.data.results[0].incorrect_answers[0])
-            this.question = response.data.results
-            this.currentQuestion = this.question[0]
-        })
+    mounted() {
+      let quizType = this.$route.params.quizType; //url : Home傳過來的參數
+      if (quizType === undefined) {
+        this.$router.replace({ name: "Home" });
+        return;
+      }
+      this.getQuestionData(quizType);
     },
-    methods:{
-        optionClick(value){
-            console.log("parentClick")
-            this.selectOption = value
-        }
+    methods: {
+      optionClick(value) {
+        console.log("parentClick");
+        this.selectOption = value;
+      },
+      nextQuestion() {
+        this.currentIndex += 1;
+        this.$store.commit("pushQuestion", this.currentQuestion);
+        this.$store.commit("pushUserAnswer", this.selectOption);
+        // clear
+        this.selectOption = "";
+      },
+      goAnswerPage(){
+        this.$store.commit("pushQuestion", this.currentQuestion);
+        this.$store.commit("pushUserAnswer", this.selectOption);
+        this.selectOption = "";
+        
+      },
+      getQuestionData(quizType) {
+        console.log("執行getQuestionData");
+        //ajax 題目api
+        let api = "https://opentdb.com/api.php?amount=10";
+        let category =
+          quizType.selectedCategory === "0"
+            ? ""
+            : `&category=${quizType.selectedCategory}`;
+        //api 參數
+        let diff =
+          quizType.selectedDiff === ""
+            ? ""
+            : `&difficulty=${quizType.selectedDiff}`;
+        let mode =
+          quizType.selectedMode === "" ? "" : `&type=${quizType.selectedMode}`;
+        //組合 api
+        api = api + category + diff + mode;
+        this.$http.get(api).then((response) => {
+          this.question = response.data.results;
+          this.isLoading = false;
+        });
+      },
+      randomOption() {
+        let randomOptionArray = [];
+        randomOptionArray.push(this.currentQuestion.correct_answer);
+        this.currentQuestion.incorrect_answers.forEach((element) => {
+          randomOptionArray.push(element);
+        });
+        console.log("array", randomOptionArray);
+        return randomOptionArray;
+      },
+    },
+    watch: {
+      question() {
+        this.currentQuestion = this.question[0];
+      },
+      currentIndex() {
+        this.currentQuestion = this.question[this.currentIndex];
+      },
+      currentQuestion() {
+        this.currentQuestion.ramdomAnswer = this.randomOption();
+      },
     },
     components: {
-      optionData
+      optionData,
     },
   };
 </script>
