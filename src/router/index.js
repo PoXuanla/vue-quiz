@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Question from '../views/Question.vue'
+import Answer from '../views/Answer.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -16,6 +17,11 @@ const routes = [
     component: Question
   },
   {
+    path:'/answer',
+    name:'Answer',
+    component:Answer
+  },
+  {
     path: '/about',
     name: 'About',
     // route level code-splitting
@@ -26,8 +32,8 @@ const routes = [
 ]
 
 const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
+  // mode: 'hash',
+  // base: process.env.BASE_URL,
   routes
 })
 

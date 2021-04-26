@@ -46,6 +46,7 @@
     margin-top: 0;
     border-radius: 0;
     background-color: $pink;
+    overflow: auto;
   }
 }
 </style>

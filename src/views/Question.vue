@@ -57,6 +57,7 @@
       };
     },
     mounted() {
+      this.$store.commit('clearData')
       let quizType = this.$route.params.quizType; //url : Home傳過來的參數
       if (quizType === undefined) {
         this.$router.replace({ name: "Home" });
@@ -79,6 +80,7 @@
       goAnswerPage(){
         this.$store.commit("pushQuestion", this.currentQuestion);
         this.$store.commit("pushUserAnswer", this.selectOption);
+        this.$router.replace({name:'Answer'})
         this.selectOption = "";
         
       },

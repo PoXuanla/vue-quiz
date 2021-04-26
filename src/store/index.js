@@ -14,6 +14,10 @@ export default new Vuex.Store({
     },
     pushUserAnswer(state,data){
       state.userAnswer.push(data)
+    },
+    clearData(state){
+      state.question = []
+      state.userAnswer = []
     }
   },
   actions: {
