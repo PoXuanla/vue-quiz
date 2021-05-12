@@ -57,12 +57,8 @@
       };
     },
     mounted() {
-      this.$store.commit('clearData')
+      this.$store.commit("initQA");
       let quizType = this.$route.params.quizType; //url : Home傳過來的參數
-      if (quizType === undefined) {
-        this.$router.replace({ name: "Home" });
-        return;
-      }
       this.getQuestionData(quizType);
     },
     methods: {
@@ -77,12 +73,11 @@
         // clear
         this.selectOption = "";
       },
-      goAnswerPage(){
+      goAnswerPage() {
         this.$store.commit("pushQuestion", this.currentQuestion);
         this.$store.commit("pushUserAnswer", this.selectOption);
-        this.$router.replace({name:'Answer'})
+        this.$router.replace({ name: "Answer" });
         this.selectOption = "";
-        
       },
       getQuestionData(quizType) {
         console.log("執行getQuestionData");
@@ -102,18 +97,31 @@
         //組合 api
         api = api + category + diff + mode;
         this.$http.get(api).then((response) => {
-          this.question = response.data.results;
-          this.isLoading = false;
+          console.log(response.data.response_code + "code");
+          if (response.data.response_code === 1) {
+            this.$router.replace({ name: "Home" });
+          } else {
+            this.question = response.data.results;
+            this.isLoading = false;
+          }
         });
       },
       randomOption() {
         let randomOptionArray = [];
-        randomOptionArray.push(this.currentQuestion.correct_answer);
-        this.currentQuestion.incorrect_answers.forEach((element) => {
-          randomOptionArray.push(element);
-        });
-        console.log("array", randomOptionArray);
-        return randomOptionArray;
+        if (
+          this.currentQuestion.correct_answer === "True" ||
+          this.currentQuestion.correct_answer === "False"
+        ) {
+          return ["True", "False"];
+        } else {
+          randomOptionArray.push(this.currentQuestion.correct_answer);
+          this.currentQuestion.incorrect_answers.forEach((element) => {
+            randomOptionArray.push(element);
+          });
+          randomOptionArray.sort(() => Math.random() - 0.5);
+          console.log("array", randomOptionArray);
+          return randomOptionArray;
+        }
       },
     },
     watch: {

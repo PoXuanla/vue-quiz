@@ -2,9 +2,8 @@
   <div id="app">
     <div class="nav bg-dark-pink">
       <div class="ml-1">
-        <router-link to="/">答題小測驗</router-link>
+        <router-link to="/" class="a">答題小測驗</router-link>
       </div>
-      <div class="mr-1">newGame</div>
     </div>
     <div id="main" class="w-70 m-auto mt-1 border-radius overflow-hidden">
       <router-view />

@@ -7,6 +7,7 @@ export default new Vuex.Store({
   state: {
     question:[],
     userAnswer:[],
+    isArrivedHome:false
   },
   mutations: {
     pushQuestion(state,data){
@@ -15,7 +16,11 @@ export default new Vuex.Store({
     pushUserAnswer(state,data){
       state.userAnswer.push(data)
     },
-    clearData(state){
+    arrivedHome(state){
+      state.isArrivedHome = true
+      console.log("arrive")
+    },
+    initQA(state){
       state.question = []
       state.userAnswer = []
     }

@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Question from '../views/Question.vue'
 import Answer from '../views/Answer.vue'
+import store from '../store'
 Vue.use(VueRouter)
 
 const routes = [
@@ -14,12 +15,18 @@ const routes = [
   {
     path:'/question',
     name:'Question',
-    component: Question
+    component: Question,
+    meta:{
+      needLogin : true
+    }
   },
   {
     path:'/answer',
     name:'Answer',
-    component:Answer
+    component:Answer,
+    meta : {
+      needLogin:true
+    }
   },
   {
     path: '/about',
@@ -36,5 +43,11 @@ const router = new VueRouter({
   // base: process.env.BASE_URL,
   routes
 })
-
+router.beforeEach(function(to,from,next){
+  if(to.meta.needLogin === true && !store.state.isArrivedHome){
+    console.log("ggg")
+    next({name:'Home'})
+  }
+  next();
+})
 export default router

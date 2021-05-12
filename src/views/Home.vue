@@ -68,6 +68,7 @@
     },
     components: {},
     mounted() {
+      this.$store.commit('arrivedHome')
       // get category
       this.$http
         .get("https://opentdb.com/api_category.php")

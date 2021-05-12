@@ -4,10 +4,10 @@
       <p class="text-center">對答案~</p>
     </div>
     <div class="text-center p-1 bg-dark-pink border-radius-bottom">
-      答對題數
+      答對題數 {{ countCorrectAnswer }} 題
     </div>
     <answer-data
-      v-for="(n,index) in question"
+      v-for="(n, index) in question"
       :key="index"
       :question="question[index]"
       :userAnswer="userAnswer[index]"
@@ -24,17 +24,16 @@
       return {
         question: [],
         userAnswer: [],
+        countCorrectAnswer: 0,
       };
     },
     mounted() {
-      let question = this.$store.state.question;
-      //預防使用者沒有問答就到answer的頁面
-      if (question.length === 0) {
-        this.$router.replace({ name: "Home" });
-        return;
-      }
       this.question = this.$store.state.question;
       this.userAnswer = this.$store.state.userAnswer;
+      this.question.forEach((element, index) => {
+        if (element.correct_answer === this.userAnswer[index])
+          this.countCorrectAnswer++;
+      });
     },
     components: {
       answerData,
